@@ -10,12 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-
-
-
-
-
-
 Standardizing a variable means subtracting the mean, and then dividing by the standard deviation. Let’s use a loop to standardize the numeric columns in the [Western Collaborative Group Study](https://clinicaltrials.gov/ct2/show/NCT00005174). This study began in 1960 with 3154 men ages 39-59, who were employed in one of 11 California based companies. They were followed until 1969 during this time, 257 of these men developed coronary heart disease (CHD). You can read this data in with the code below. You can access this dataset with the following code:
 
 ```{R}
@@ -96,15 +90,49 @@ bmi     Body Mass Index
 ### Question 1: Standardize Function
 
 A. Create a function called standardize.me() that takes a numeric vector as an argument, and returns the standardized version of the vector. 
-B. Assign all the numeric columns of the original WCGS dataset to a new dataset called WCGS.new.
-C. Using a loop and your new function, standardize all the variables WCGS.new dataset.
-D. What should the mean and standard deviation of all your new standardized variables be? Test your prediction by running a loop
+```{r}
+standardize.me <- function(x) {
+  x <- (x-mean(x))/sd(x)
+  return(x)
+}
 
+a <- c(1,5,6,8,9,5,7)
+standardize.me(a)
+```
+B. Assign all the numeric columns of the original WCGS dataset to a new dataset called WCGS.new.
+```{r}
+library(tidyverse)
+library(dplyr)
+WCGS.new <- wcgs %>% 
+  select_if(is.numeric) %>%
+  drop_na()
+```
+C. Using a loop and your new function, standardize all the variables WCGS.new dataset.
+```{r}
+for (i.cols in 1:ncol(WCGS.new)) {
+  WCGS.new[, i.cols] <- standardize.me(WCGS.new[, i.cols])
+}
+```
+D. What should the mean and standard deviation of all your new standardized variables be? Test your prediction by running a loop
+```{r}
+#mean should be about zero, and SD is 1
+for (i.mean in 1:ncol(WCGS.new)) {
+  print(mean(WCGS.new[, i.mean]))
+  print(sd(WCGS.new[, i.sd]))
+}
+```
 
 
 
 ### Question 2: Looping to Calculate
 
 A. Using a loop, calculate the mean weight of the subjects separated by the type of CHD they have.
+```{r}
+
+
+```
 B. Now do the same thing, but now don’t use a loop
+```{r}
+
+```
 
