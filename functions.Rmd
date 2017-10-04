@@ -96,7 +96,8 @@ standardize.me <- function(x) {
   return(x)
 }
 
-a <- c(1,5,6,8,9,5,7)
+a <- c(1,5,6,8, NA,9,5,7)
+as.numeric(a)
 standardize.me(a)
 ```
 B. Assign all the numeric columns of the original WCGS dataset to a new dataset called WCGS.new.
@@ -105,6 +106,7 @@ library(tidyverse)
 library(dplyr)
 WCGS.new <- wcgs %>% 
   select_if(is.numeric) %>%
+  ##drop na values 
   drop_na()
 ```
 C. Using a loop and your new function, standardize all the variables WCGS.new dataset.
@@ -115,10 +117,10 @@ for (i.cols in 1:ncol(WCGS.new)) {
 ```
 D. What should the mean and standard deviation of all your new standardized variables be? Test your prediction by running a loop
 ```{r}
-#mean should be about zero, and SD is 1
+##mean should be about zero, and SD is 1
 for (i.mean in 1:ncol(WCGS.new)) {
   print(mean(WCGS.new[, i.mean]))
-  print(sd(WCGS.new[, i.sd]))
+  print(sd(WCGS.new[, i.mean]))
 }
 ```
 
@@ -128,11 +130,31 @@ for (i.mean in 1:ncol(WCGS.new)) {
 
 A. Using a loop, calculate the mean weight of the subjects separated by the type of CHD they have.
 ```{r}
+no_chd <- 0
+yes_chd <-0
+obs_no_chd = 0
+obs_yes_chd = 0
 
+for (i in seq_along(wcgs[[1]])){
+   if (wcgs$chd69[i]=="no"){
+   no_chd <- no_chd + wcgs$weight[i]
+   obs_no_chd = obs_no_chd + 1 
+   } else {
+   
+   yes_chd <- yes_chd + wcgs$weight[i]
+   obs_yes_chd <- obs_yes_chd + 1
+   }
+}
 
+mean_no_chd <- no_chd/obs_no_chd
+mean_yes_chd <- yes_chd/obs_yes_chd
+
+mean_no_chd
+mean_yes_chd
 ```
 B. Now do the same thing, but now don’t use a loop
 ```{r}
-
+aggregate(weight ~ chd69, wcgs, mean)
+          
 ```
 
